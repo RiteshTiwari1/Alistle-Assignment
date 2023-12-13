@@ -66,7 +66,7 @@
     console.log('Person not found in sites array');
   }
 
-  console.log(sites);
+  // console.log(sites);
 }
 
 
@@ -86,52 +86,65 @@
       });
 
       console.log(counter);
+
+      let totalnumber = counter / 4;
+      totalnumber=Math.min(totalnumber,3);
+
+      console.log(totalnumber);
+      let visited= new Set();
       sites.forEach(site => {
 
         // console.log(site.installationDate);
-        if (site.grievance===true && site.InstallationDate.split('T')[0] === currentDate) {
+        if (!visited.has(site.name) &&  site.grievance===true && site.InstallationDate.split('T')[0] === currentDate) {
           electricians.forEach(electricians => {
-              if(electricians.griveianceElectrician === true &&electricians.capacity<3){
+              if(!visited.has(site) && electricians.griveianceElectrician === true &&electricians.capacity<totalnumber){
                 site.AssignedElectrician.push({
                   electricianName: electricians.name,
                   electricianAssignDate: currentDate
                 });
                 electricians.capacity++;
                 counter --;
-              }
-          });
-        }
-      });
-
-      sites.forEach(site => {
-        if (site.grievance===false && site.InstallationDate.split('T')[0] === currentDate) {
-          electricians.forEach(electricians => {
-              if(electricians.griveianceElectrician === false &&electricians.capacity<3){
-                site.AssignedElectrician.push({
-                  electricianName: electricians.name,
-                  electricianAssignDate: currentDate
-                });
-                electricians.capacity++;
-                counter --;
+                visited.add(site.name);
               }
           });
         }
       });
       
-      sites.forEach(site => {
-        if (site.InstallationDate.split('T')[0] === currentDate) {
-          electricians.forEach(electricians => {
-              if(electricians.capacity<3){
-                site.AssignedElectrician.push({
-                  electricianName: electricians.name,
-                  electricianAssignDate: currentDate
-                });
-                electricians.capacity++;
-                counter --;
-              }
-          });
-        }
+  sites.forEach(site => {
+
+// console.log(site.installationDate);
+    if (!visited.has(site.name) &&  site.grievance===false && site.InstallationDate.split('T')[0] === currentDate) {
+      electricians.forEach(electricians => {
+          if(!visited.has(site) && electricians.griveianceElectrician === false &&electricians.capacity<totalnumber){
+            site.AssignedElectrician.push({
+              electricianName: electricians.name,
+              electricianAssignDate: currentDate
+            });
+            electricians.capacity++;
+            counter --;
+            visited.add(site.name);
+          }
       });
+    }
+  });
+      
+  sites.forEach(site => {
+
+// console.log(site.installationDate);
+    if (!visited.has(site.name) && site.InstallationDate.split('T')[0] === currentDate) {
+      electricians.forEach(electricians => {
+          if(!visited.has(site) && electricians.capacity<totalnumber){
+            site.AssignedElectrician.push({
+              electricianName: electricians.name,
+              electricianAssignDate: currentDate
+            });
+            electricians.capacity++;
+            counter --;
+            visited.add(site.name);
+          }
+      });
+    }
+  });
       
       console.log(sites);
       console.log(electricians);
@@ -140,7 +153,6 @@
         console.log(counter);
         console.log("data is huge");
       }
-
     }
   </script>
 </body>

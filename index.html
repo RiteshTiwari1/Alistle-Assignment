@@ -4,11 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Electrician Allocation System</title>
+  <link rel="stylesheet" type="text/css" href="index.css">
+
 </head>
 <body>
-  <h1>Electrician Allocation System</h1>
-  <button onclick="autoAssign()">Auto Assign Electricians</button>
-  <button onclick="dateChange()">Date Change</button>
+  <div class="container">
+    <h1>Electrician Allocation System</h1>
+
+    <button class="assign-button" onclick="autoAssign()">Auto Assign Electricians</button>
+
+    <div class="form-group">
+      
+      <input type="text" id="PersonName" name="PersonName" placeholder="Person Name">
+    </div>
+
+    <button class="date-change-button" onclick="dateChange()">Date Change</button>
+  </div>
+
+
   <script>
     const electricians = [
     {name:"Digvijay",phone:"6161232524",zone:[],"griveianceElectrician":true},{name:"Pranav",phone:"6161232524",zone:[],"griveianceElectrician":true},{name:"Sidharth",phone:"6161232524",zone:["NOIDA","GHAZIABAD"],"griveianceElectrician":false},{name:"Javed",phone:"6161232524",zone:["GURGAON"],"griveianceElectrician":false}
@@ -23,17 +36,40 @@
       electrician.capacity = 0;
     });
 
+  
     function dateChange() {
-      const currentDate = new Date().toISOString(); // Get current date and time
+  
+  var personNameValue = document.getElementById('PersonName').value;
+      console.log(personNameValue);
+  const currentDate = new Date().toISOString(); // Get current date and time
 
-      
-      sites.forEach(site => {
-        site.InstallationDate = currentDate;
-      });
-      
-      console.log(sites);
-      
-    }
+  // console.log(typeof personNameValue);
+  
+  const matchingSite = sites.find(site => {
+  
+  const siteNameWithoutSpaces = site.name.trim();
+  const personNameWithoutSpaces = personNameValue.trim();
+
+  if (siteNameWithoutSpaces === personNameWithoutSpaces) {
+    console.log('Found:', site.name);
+    return site;
+  }
+});
+
+  console.log(matchingSite);
+
+  if (matchingSite) {
+    
+    matchingSite.InstallationDate = currentDate;
+    console.log('Updated InstallationDate for', personNameValue, 'to', currentDate);
+  } else {
+    console.log('Person not found in sites array');
+  }
+
+  console.log(sites);
+}
+
+
     function autoAssign() {
       const currentDate = new Date().toISOString().split('T')[0]; // Get current date
 
